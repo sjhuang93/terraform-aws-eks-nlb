@@ -1,0 +1,37 @@
+module "k8s_test_nlb" {
+  source  = "./eks_nlb_service"
+
+  base    = local.base
+  service = module.k8s_pod_test_service  ## Other module to create k8s serviceAccount, service...
+
+  nlb_class         = public-test        ## NLB name in aws
+  federations       = var.federations    ## A map that incloud a service with mutiple domain.
+
+  expose_target_ports = {
+    http = {
+      expose_port    = 80
+      container_port = 8080
+      protocol       = "TCP"
+    },
+    https = {
+      expose_port    = 443
+      container_port = 8443
+      protocol       = "TCP"
+    },
+    mqtt = {
+      expose_port    = 8883
+      container_port = 8883
+      protocol       = "TCP"
+    }
+  }
+  
+  ## Optional
+  attributes = {
+    preserve_client_ip = true
+    proxy_protocol_v2  = true
+  }
+
+  depends_on = [
+    module.k8s_pod_xxx_service
+  ]
+}
