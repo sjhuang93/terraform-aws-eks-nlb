@@ -30,8 +30,4 @@ module "k8s_test_nlb" {
     preserve_client_ip = true
     proxy_protocol_v2  = true
   }
-
-  depends_on = [
-    module.k8s_pod_xxx_service
-  ]
 }
